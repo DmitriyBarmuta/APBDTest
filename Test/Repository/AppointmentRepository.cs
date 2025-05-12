@@ -2,11 +2,11 @@ using Test.Infrastructure;
 
 namespace Tutorial9.Repository;
 
-public class TestRepository : ITestRepository
+public class AppointmentRepository : IAppointmentRepository
 {
     private readonly ISqlConnectionFactory _connectionFactory;
 
-    public TestRepository(ISqlConnectionFactory connectionFactory)
+    public AppointmentRepository(ISqlConnectionFactory connectionFactory)
     {
         _connectionFactory = connectionFactory;
     }

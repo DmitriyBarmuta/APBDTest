@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Test.Exceptions;
 using Test.Model.Appointment;
 using Test.Services;
-using Tutorial9.Services;
 
 namespace Test.Controllers;
 

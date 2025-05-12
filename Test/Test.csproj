@@ -15,11 +15,15 @@
 
     <ItemGroup>
       <None Remove="Resources\Database\DatabaseCreate.sql" />
-      <EmbeddedResource Include="Resources\Database\DatabaseCreate.sql" />
       <None Remove="Resources\Database\DatabaseFill.sql" />
-      <EmbeddedResource Include="Resources\Database\DatabaseFill.sql" />
       <None Remove="Resources\Database\Procedure.sql" />
-      <EmbeddedResource Include="Resources\Database\Procedure.sql" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Resources\Database\create1A.sql" />
+      <EmbeddedResource Include="Resources\Database\create1A.sql" />
+      <None Remove="Resources\Database\drop1A.sql" />
+      <EmbeddedResource Include="Resources\Database\drop1A.sql" />
     </ItemGroup>
 
 </Project>
