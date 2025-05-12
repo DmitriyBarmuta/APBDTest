@@ -45,8 +45,8 @@ public class AppointmentsController : ControllerBase
     {
         try
         {
-            var id = await _appointmentService.CreateNewAppointment(createAppointmentDto, cancellationToken);
-            return CreatedAtAction(nameof(CreateNewAppointment), new { id }, new { id });
+            await _appointmentService.CreateNewAppointment(createAppointmentDto, cancellationToken);
+            return Created();
         }
         //TODO: catch all needed exceptions
         catch (Exception ex)

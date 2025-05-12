@@ -1,7 +1,7 @@
 using Test.Infrastructure;
 using Test.Model.Appointment;
 
-namespace Tutorial9.Repository;
+namespace Test.Repository;
 
 public class AppointmentRepository : IAppointmentRepository
 {
@@ -73,5 +73,24 @@ public class AppointmentRepository : IAppointmentRepository
             DoctorId = reader.GetInt32(reader.GetOrdinal("Doctor_Id")),
             Date = reader.GetDateTime(reader.GetOrdinal("Date"))
         };
+    }
+
+    public async Task CreateNewAppointment(Appointment appointment, CancellationToken cancellationToken)
+    {
+        const string sql = """
+                           INSERT INTO Appointment (Appointment_Id, Patient_Id, Doctor_Id, Date)
+                           VALUES (@AppointmentId, @PatientId, @DoctorId, @Date);
+                           """;
+        
+        await using var conn = _connectionFactory.GetConnection();
+        await using var cmd = conn.CreateCommand();
+        cmd.CommandText = sql;
+        cmd.Parameters.AddWithValue("@AppointmentId", appointment.AppointmentId);
+        cmd.Parameters.AddWithValue("@PatientId", appointment.PatientId);
+        cmd.Parameters.AddWithValue("@DoctorId", appointment.DoctorId);
+        cmd.Parameters.AddWithValue("@Date", appointment.Date);
+
+        await conn.OpenAsync(cancellationToken);
+        await cmd.ExecuteNonQueryAsync(cancellationToken);
     }
 }

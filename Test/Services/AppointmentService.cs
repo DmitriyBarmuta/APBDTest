@@ -3,6 +3,7 @@ using Test.Model.Appointment;
 using Test.Model.AppointmentService;
 using Test.Model.Doctor;
 using Test.Model.Patient;
+using Test.Repository;
 using Tutorial9.Repository;
 
 namespace Test.Services;
@@ -66,8 +67,8 @@ public class AppointmentService : IAppointmentService
         };
     }
 
-    public async Task<int> CreateNewAppointment(CreateAppointmentDTO createAppointmentDto, CancellationToken cancellationToken)
+    public async Task CreateNewAppointment(CreateAppointmentDTO createAppointmentDto, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        return await _appointmentRepository.CreateNewAppointment(cancellationToken);
     }
 }
