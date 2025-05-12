@@ -34,6 +34,7 @@ public class AppointmentsController : ControllerBase
         }
         catch (Exception ex)
         {
+            Console.WriteLine(ex.StackTrace);
             return StatusCode(500, new { error = "Internal server error occured.", detail = ex.Message});
         }
     }

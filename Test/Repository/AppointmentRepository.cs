@@ -1,4 +1,5 @@
 using Test.Infrastructure;
+using Test.Model.Appointment;
 
 namespace Tutorial9.Repository;
 
@@ -50,4 +51,27 @@ public class AppointmentRepository : IAppointmentRepository
      *
      * cmd.Parameters.AddWithValue("@param", value); → Always prefer parameters for security & type safety
      */
+    
+    public async Task<Appointment?> GetByIdAsync(int id, CancellationToken cancellationToken)
+    {
+        const string sql  = "SELECT * FROM Appointment WHERE Appointment_Id = @AppointmentId;";
+
+        await using var conn = _connectionFactory.GetConnection();
+        await using var cmd = conn.CreateCommand();
+        cmd.CommandText = sql;
+        cmd.Parameters.AddWithValue("@AppointmentId", id);
+
+        await conn.OpenAsync(cancellationToken);
+        await using var reader = await cmd.ExecuteReaderAsync(cancellationToken);
+
+        if (!await reader.ReadAsync(cancellationToken)) return null;
+        
+        return new Appointment
+        {
+            AppointmentId = reader.GetInt32(reader.GetOrdinal("Appointment_Id")),
+            PatientId = reader.GetInt32(reader.GetOrdinal("Patient_Id")),
+            DoctorId = reader.GetInt32(reader.GetOrdinal("Doctor_Id")),
+            Date = reader.GetDateTime(reader.GetOrdinal("Date"))
+        };
+    }
 }

@@ -1,5 +1,6 @@
 using Test.Config;
 using Test.Infrastructure;
+using Test.Repository;
 using Test.Services;
 using Tutorial9.Repository;
 
