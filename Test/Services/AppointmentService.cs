@@ -69,6 +69,23 @@ public class AppointmentService : IAppointmentService
 
     public async Task CreateNewAppointment(CreateAppointmentDTO createAppointmentDto, CancellationToken cancellationToken)
     {
-        return await _appointmentRepository.CreateNewAppointment(cancellationToken);
+        var appSame = _appointmentRepository.DoesAppointmentExist(createAppointmentDto.AppointmentId, cancellationToken);
+        if (appSame.Result) throw new Exception();
+        
+        var patient = await _patientRepository.GetByIdAsync(createAppointmentDto.PatientId, cancellationToken);
+        if (patient == null) throw new NoSuchPatientException($"There's no patient with ID {createAppointmentDto.PatientId}");
+        
+        var doctor = await _doctorRepository.GetByPwz(createAppointmentDto.Pwz, cancellationToken);
+        if (doctor == null) throw new NoSuchDoctorWithPwzException($"There's no doctor with PWZ {createAppointmentDto.Pwz}");
+
+
+        var appointment = new Appointment
+        {
+            AppointmentId = createAppointmentDto.AppointmentId,
+            PatientId = createAppointmentDto.PatientId,
+            DoctorId = doctor.Id,
+        };
+        
+        await _appointmentRepository.CreateNewAppointment(appointment, cancellationToken);
     }
 }

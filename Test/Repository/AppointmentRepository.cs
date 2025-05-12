@@ -79,7 +79,7 @@ public class AppointmentRepository : IAppointmentRepository
     {
         const string sql = """
                            INSERT INTO Appointment (Appointment_Id, Patient_Id, Doctor_Id, Date)
-                           VALUES (@AppointmentId, @PatientId, @DoctorId, @Date);
+                           VALUES (@AppointmentId, @PatientId, @DoctorId, GETDATE());
                            """;
         
         await using var conn = _connectionFactory.GetConnection();
@@ -88,9 +88,22 @@ public class AppointmentRepository : IAppointmentRepository
         cmd.Parameters.AddWithValue("@AppointmentId", appointment.AppointmentId);
         cmd.Parameters.AddWithValue("@PatientId", appointment.PatientId);
         cmd.Parameters.AddWithValue("@DoctorId", appointment.DoctorId);
-        cmd.Parameters.AddWithValue("@Date", appointment.Date);
 
         await conn.OpenAsync(cancellationToken);
         await cmd.ExecuteNonQueryAsync(cancellationToken);
+    }
+
+    public async Task<bool> DoesAppointmentExist(int appointmentId, CancellationToken cancellationToken)
+    {
+        const string sql = "SELECT COUNT(*) FROM Appointment WHERE Appointment_Id = @AppoinementId;";
+
+        await using var conn = _connectionFactory.GetConnection();
+        await using var cmd = conn.CreateCommand();
+        cmd.CommandText = sql;
+        cmd.Parameters.AddWithValue("@AppointmentId", appointmentId);
+
+        await conn.OpenAsync(cancellationToken);
+        var result = (int)(await cmd.ExecuteScalarAsync(cancellationToken) ?? 0);
+        return result > 0;
     }
 }
